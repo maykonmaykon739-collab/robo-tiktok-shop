@@ -2,93 +2,138 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Robô TikTok Shop V3</title>
 <style>
-:root{--bg:#0b0d12;--card:#171a22;--line:#2c313c;--txt:#f7f7f8;--muted:#aeb4bf;--pink:#fe2c55;--cyan:#25f4ee;--green:#22c58b}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#090a0e,#151821);color:var(--txt);font-family:Arial,sans-serif}
-header{padding:18px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;background:#0b0d12ee;backdrop-filter:blur(12px)}
-h1{font-size:21px;margin:0 0 4px}.sub{font-size:13px;color:var(--muted)}
-main{max-width:980px;margin:auto;padding:15px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}
-input,select,textarea{width:100%;background:#0e1015;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:11px}textarea{min-height:120px}
-button{border:0;border-radius:11px;padding:11px 14px;background:var(--pink);color:#fff;font-weight:700;cursor:pointer}button.alt{background:#242934;border:1px solid var(--line)}button.green{background:var(--green)}button:disabled{opacity:.45}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.notice{border-left:3px solid var(--cyan);background:#12191b;border-radius:8px;padding:10px 12px;color:#dce6e8;font-size:13px}
-pre{white-space:pre-wrap;line-height:1.5;background:#0e1015;border:1px solid var(--line);border-radius:12px;padding:13px}
-.progress{height:9px;background:#0d0f13;border-radius:20px;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:var(--pink);transition:.3s}
-.result{border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:10px;background:#111319}.result video{width:100%;border-radius:10px;background:#000;max-height:620px}.muted{color:var(--muted);font-size:12px}.tag{display:inline-block;background:#252a34;border-radius:20px;padding:4px 8px;font-size:11px;margin:2px}
+:root{--bg:#0b0d12;--card:#171a22;--line:#2c313c;--accent:#4d90fe;--text:#e0e4eb;--muted:#88909f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif}
+header{padding:18px 16px;border-bottom:1px solid var(--line)}
+h1{font-size:21px;margin:0 4px}
+.sub{font-size:13px;color:var(--muted);margin-top:4px}
+main{max-width:980px;margin:auto;padding:15px}
+.card{background:var(--card);border-radius:14px;padding:20px;margin-bottom:16px;border:1px solid var(--line)}
+h2{font-size:17px;margin:0 0 14px 0;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+input,select,textarea{width:100%;background:#0e1018;border:1px solid var(--line);border-radius:8px;padding:10px 12px;color:var(--text);font-size:15px}
+button{border:0;border-radius:11px;padding:11px 14px;font-size:15px;font-weight:600;background:var(--accent);color:#fff;cursor:pointer}
+button:disabled{opacity:0.5;cursor:not-allowed}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+pre{white-space:pre-wrap;line-height:1.5;background:#0e1018;padding:12px;border-radius:8px;margin-top:12px;font-size:13px}
+.progress{height:9px;background:#0d0f13;border-radius:6px;overflow:hidden;margin:12px 0;display:none}
+.progress-bar{height:100%;width:0%;background:var(--accent);transition:width 0.3s}
+.result{border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:14px;display:none}
+.success{border-color:#2ecc71;background:rgba(46,204,113,0.08)}
+.error{border-color:#e74c3c;background:rgba(231,76,60,0.08)}
 </style>
 </head>
 <body>
-<header><h1>🤖 Robô TikTok Shop V3</h1><div class="sub">Roteiro + ganchos + legenda + hashtags + geração de vídeos</div></header>
-<main>
-<div class="card">
-<h2>🛍️ Produto</h2>
-<div class="grid">
-<div><label>Nome</label><input id="product" placeholder="Ex.: Kit Creatina 3 em 1"></div>
-<div><label>Preço</label><input id="price" placeholder="R$ 184,59"></div>
-<div><label>Público</label><input id="audience" placeholder="Mulheres que gostam de fitness"></div>
-<div><label>Estilo</label><select id="style"><option>UGC selfie natural</option><option>Influenciadora apresentando</option><option>POV</option><option>Produto em close</option></select></div>
-<div><label>Quantidade de vídeos</label><select id="qty"><option value="1">1 vídeo</option><option value="3">3 vídeos</option><option value="5" selected>5 vídeos</option></select></div>
-<div><label>Duração de cada vídeo</label><select id="duration"><option value="5">5s</option><option value="10" selected>10s</option><option value="15">15s</option></select></div>
-<div><label>Formato</label><select id="ratio"><option value="720:1280">9:16 — TikTok</option><option value="1280:720">16:9</option><option value="960:960">1:1</option></select></div>
-<div><label>URL pública da foto do produto (opcional)</label><input id="imageUrl" placeholder="https://.../produto.jpg"></div>
-</div>
-<div class="actions"><button id="go" onclick="createAll()">🚀 Criar roteiros + vídeos</button><button class="alt" onclick="createScripts()">📝 Criar somente roteiros</button></div>
-<div id="status" class="muted"></div><div class="progress"><div id="bar" class="bar"></div></div>
-</div>
+<header>
+  <h1>🤖 Robô TikTok Shop V3</h1>
+    <div class="sub">Gera vídeos automaticamente</div>
+    </header>
+    <main>
+      <div class="card">
+          <h2>🛍️ Produto</h2>
+              <div class="grid">
+                    <div><label>Nome</label><input id="product" placeholder="Ex: Relógio inteligente"></div>
+                          <div><label>Preço</label><input id="price" placeholder="Ex: 39,90"></div>
+                                <div><label>Público</label><input id="audience" placeholder="Ex: mulheres 25-45"></div>
+                                      <div>
+                                              <label>Estilo</label>
+                                                      <select id="style">
+                                                                <option value="divertido">Divertido</option>
+                                                                          <option value="profissional">Profissional</option>
+                                                                                    <option value="urgente">Urgente/Oferta</option>
+                                                                                              <option value="historia">História/Emocional</option>
+                                                                                                      </select>
+                                                                                                            </div>
+                                                                                                                  <div>
+                                                                                                                          <label>Quantidade de vídeos</label>
+                                                                                                                                  <select id="count">
+                                                                                                                                            <option value="1">1 vídeo</option>
+                                                                                                                                                      <option value="3">3 vídeos</option>
+                                                                                                                                                                <option value="5">5 vídeos</option>
+                                                                                                                                                                          <option value="10">10 vídeos</option>
+                                                                                                                                                                                  </select>
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                            </div>
+                                                                                                                                                                                                <div class="actions">
+                                                                                                                                                                                                      <button id="gerar">🚀 Gerar Vídeos</button>
+                                                                                                                                                                                                            <button id="limpar" style="background:#2c313c">🗑️ Limpar</button>
+                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                    <div class="progress" id="progress">
+                                                                                                                                                                                                                          <div class="progress-bar" id="bar"></div>
+                                                                                                                                                                                                                              </div>
+                                                                                                                                                                                                                                  <div class="result" id="result"></div>
+                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                    </main>
 
-<div class="card"><h2>🎯 Pacote de conteúdo</h2><div id="content">Preencha o produto e clique em criar.</div></div>
-<div class="card"><h2>🎬 Vídeos gerados</h2><div id="videos"><div class="muted">Nenhum vídeo ainda.</div></div></div>
+                                                                                                                                                                                                                                    <script>
+                                                                                                                                                                                                                                    const btn = document.getElementById('gerar');
+                                                                                                                                                                                                                                    const limpar = document.getElementById('limpar');
+                                                                                                                                                                                                                                    const progress = document.getElementById('progress');
+                                                                                                                                                                                                                                    const bar = document.getElementById('bar');
+                                                                                                                                                                                                                                    const result = document.getElementById('result');
 
-<div class="card">
-<h2>⚙️ Configuração do servidor</h2>
-<div class="notice">A chave da API fica somente no servidor. O navegador nunca recebe a chave. Para gerar vídeo, configure <b>RUNWAYML_API_SECRET</b> no arquivo <b>.env</b>.</div>
-<p class="muted">A geração de vídeo usa uma API externa e consome créditos. Não coloque sua chave em prints, HTML ou mensagens públicas.</p>
-</div>
-</main>
-<script>
-const hooks=[
-'“Você precisa ver isso antes de comprar!”',
-'“Eu encontrei isso e fiquei surpresa com o resultado…”',
-'“Se você quer economizar, olha essa oportunidade.”',
-'“Pare de passar direto por esse produto!”',
-'“Eu testaria isso antes de gastar dinheiro em outra coisa.”'
-];
-const angles=[
-'problema → solução','benefício principal','demonstração rápida','comparação de uso','oferta + urgência sem promessa falsa'
-];
-function data(){
- return {product:product.value.trim()||'produto',price:price.value.trim(),audience:audience.value.trim()||'pessoas interessadas no produto',style:style.value,duration:Number(duration.value),ratio:ratio.value,qty:Number(qty.value),imageUrl:imageUrl.value.trim()};
-}
-function buildScripts(x){
- return Array.from({length:x.qty},(_,i)=>{
-  const hook=hooks[i%hooks.length], angle=angles[i%angles.length];
-  return `VÍDEO ${i+1} — ${angle.toUpperCase()}\\n\\nGANCHO (0–3s)\\n${hook}\\n\\nDESENVOLVIMENTO\\nMostre ${x.product} com aparência natural. Fale para ${x.audience} sobre ${angle}, usando somente benefícios reais do produto.${x.price?` Preço informado: ${x.price}.`:''}\\n\\nDEMONSTRAÇÃO\\nClose no produto + uso/detalhe principal + reação natural.\\n\\nCTA\\n“Confira o produto no TikTok Shop e veja o preço e as condições disponíveis agora.”\\n\\nESTILO: ${x.style}\\nDURAÇÃO: ${x.duration}s\\nFORMATO: 9:16`;
- });
-}
-function packageText(x,scripts){
- const caption=`${x.product}: descubra os principais detalhes e veja se faz sentido para você. Confira no TikTok Shop.`;
- const tags=['#TikTokShop','#Achadinhos','#Oferta','#Comprinhas','#TikTokMadeMeBuyIt'];
- return `<h3>Ganchos</h3>${scripts.map((s,i)=>`<span class="tag">Vídeo ${i+1}</span>`).join('')}<h3>Legenda</h3><p>${caption}</p><h3>Hashtags</h3><p>${tags.join(' ')}</p><h3>Roteiros</h3>${scripts.map(s=>`<pre>${escapeHtml(s)}</pre>`).join('')}`;
-}
-function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-async function createScripts(){
- const x=data(), scripts=buildScripts(x); content.innerHTML=packageText(x,scripts); status.textContent=`${scripts.length} roteiro(s) criado(s).`; bar.style.width='100%';
-}
-async function createAll(){
- const x=data(), scripts=buildScripts(x); content.innerHTML=packageText(x,scripts); videos.innerHTML=''; go.disabled=true; bar.style.width='5%';
- for(let i=0;i<scripts.length;i++){
-  status.textContent=`Gerando vídeo ${i+1} de ${scripts.length}…`;
-  bar.style.width=`${Math.round((i/scripts.length)*90)+5}%`;
-  try{
-   const r=await fetch('/api/generate-video',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:x.product,price:x.price,audience:x.audience,style:x.style,duration:x.duration,ratio:x.ratio,imageUrl:x.imageUrl,script:scripts[i],variant:i+1})});
-   const d=await r.json(); if(!r.ok) throw new Error(d.error||'Falha');
-   videos.insertAdjacentHTML('beforeend',`<div class="result"><b>Vídeo ${i+1}</b><video controls playsinline src="${escapeHtml(d.videoUrl)}"></video><div class="actions"><a href="${escapeHtml(d.videoUrl)}" target="_blank"><button>▶ Abrir vídeo</button></a></div></div>`);
-  }catch(e){videos.insertAdjacentHTML('beforeend',`<div class="result">❌ Vídeo ${i+1}: ${escapeHtml(e.message)}</div>`)}
- }
- bar.style.width='100%';status.textContent='Processo concluído.';go.disabled=false;
-}
-</script>
-</body>
-</html>
+                                                                                                                                                                                                                                    btn.addEventListener('click', async () => {
+                                                                                                                                                                                                                                      const product = document.getElementById('product').value.trim();
+                                                                                                                                                                                                                                        const price = document.getElementById('price').value.trim();
+                                                                                                                                                                                                                                          const audience = document.getElementById('audience').value.trim();
+                                                                                                                                                                                                                                            const style = document.getElementById('style').value;
+                                                                                                                                                                                                                                              const count = parseInt(document.getElementById('count').value);
+
+                                                                                                                                                                                                                                                if (!product || !price || !audience) {
+                                                                                                                                                                                                                                                    alert('Preencha Nome, Preço e Público!');
+                                                                                                                                                                                                                                                        return;
+                                                                                                                                                                                                                                                          }
+
+                                                                                                                                                                                                                                                            btn.disabled = true;
+                                                                                                                                                                                                                                                              btn.textContent = '⏳ Gerando...';
+                                                                                                                                                                                                                                                                progress.style.display = 'block';
+                                                                                                                                                                                                                                                                  result.style.display = 'none';
+                                                                                                                                                                                                                                                                    bar.style.width = '0%';
+
+                                                                                                                                                                                                                                                                      try {
+                                                                                                                                                                                                                                                                          const res = await fetch('/api/generate-video', {
+                                                                                                                                                                                                                                                                                method: 'POST',
+                                                                                                                                                                                                                                                                                      headers: { 'Content-Type': 'application/json' },
+                                                                                                                                                                                                                                                                                            body: JSON.stringify({ product, price, audience, style, count })
+                                                                                                                                                                                                                                                                                                });
+
+                                                                                                                                                                                                                                                                                                    bar.style.width = '50%';
+
+                                                                                                                                                                                                                                                                                                        const data = await res.json();
+
+                                                                                                                                                                                                                                                                                                            bar.style.width = '100%';
+
+                                                                                                                                                                                                                                                                                                                if (!res.ok) throw new Error(data.error || 'Erro na requisição');
+
+                                                                                                                                                                                                                                                                                                                    result.className = 'result success';
+                                                                                                                                                                                                                                                                                                                        result.innerHTML = `<strong>✅ Sucesso!</strong><br><br>
+                                                                                                                                                                                                                                                                                                                              ${data.message || 'Vídeos gerados com sucesso'}<br>
+                                                                                                                                                                                                                                                                                                                                    Recebido: ${data.promptRecebido || '(ok)'}<br>
+                                                                                                                                                                                                                                                                                                                                          <a href="${data.videoUrl || '#'}" target="_blank" style="color:#4d90fe">🔗 Ver vídeo</a>`;
+                                                                                                                                                                                                                                                                                                                                              result.style.display = 'block';
+
+                                                                                                                                                                                                                                                                                                                                                } catch (err) {
+                                                                                                                                                                                                                                                                                                                                                    result.className = 'result error';
+                                                                                                                                                                                                                                                                                                                                                        result.innerHTML = `<strong>❌ Erro</strong><br><br>${err.message}`;
+                                                                                                                                                                                                                                                                                                                                                            result.style.display = 'block';
+                                                                                                                                                                                                                                                                                                                                                              } finally {
+                                                                                                                                                                                                                                                                                                                                                                  btn.disabled = false;
+                                                                                                                                                                                                                                                                                                                                                                      btn.textContent = '🚀 Gerar Vídeos';
+                                                                                                                                                                                                                                                                                                                                                                          setTimeout(() => { progress.style.display = 'none'; bar.style.width = '0%'; }, 2000);
+                                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                            });
+
+                                                                                                                                                                                                                                                                                                                                                                            limpar.addEventListener('click', () => {
+                                                                                                                                                                                                                                                                                                                                                                              document.getElementById('product').value = '';
+                                                                                                                                                                                                                                                                                                                                                                                document.getElementById('price').value = '';
+                                                                                                                                                                                                                                                                                                                                                                                  document.getElementById('audience').value = '';
+                                                                                                                                                                                                                                                                                                                                                                                    result.style.display = 'none';
+                                                                                                                                                                                                                                                                                                                                                                                    });
+                                                                                                                                                                                                                                                                                                                                                                                    </script>
+                                                                                                                                                                                                                                                                                                                                                                                    </body>
+                                                                                                                                                                                                                                                                                                                                                                                    </html>
+                                                                                                                                                                                                                                                                                                                                                                                    
