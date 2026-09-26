@@ -1,33 +1,44 @@
-# Robô TikTok Shop V3
+export default async function handler(req) {
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Método não permitido' }), { status: 405 });
+  }
 
-## O que esta versão faz
+  const { product, price, audience, style, count } = await req.json();
 
-- Gera vários roteiros diferentes para o mesmo produto.
-- Cria ganchos diferentes automaticamente.
-- Gera legenda e hashtags.
-- Envia cada roteiro para geração de vídeo.
-- Aceita foto pública do produto como primeiro frame opcional.
-- Formato vertical 720x1280 para TikTok.
-- Mantém a API Key apenas no servidor.
+  if (!product || !price || !audience) {
+    return new Response(JSON.stringify({ error: 'Preencha todos os campos!' }), { status: 400 });
+  }
 
-## Instalação
+  const estilos = {
+    divertido: 'divertido e animado',
+    profissional: 'profissional e confiável',
+    urgente: 'urgente e imperdível',
+    historia: 'emocional e envolvente'
+  };
 
-1. Instale Node.js 18+.
-2. Entre nesta pasta no terminal.
-3. `npm install`
-4. Copie `.env.example` para `.env`.
-5. Crie sua chave no Runway Dev e coloque em `RUNWAYML_API_SECRET`.
-6. `npm start`
-7. Abra `http://localhost:3000`.
+  const roteiros = [];
+  for (let i = 0; i < count; i++) {
+    roteiros.push({
+      id: i + 1,
+      titulo: `${product} — O que você precisa saber!`,
+      gancho: i % 2 === 0 
+        ? `Você sabia que o ${product} pode mudar seu dia?`
+        : `Não deixe de conferir esse ${product} incrível!`,
+      corpo: `O ${product} é perfeito para ${audience}! Com preço de R$ ${price}, qualidade e estilo ${estilos[style]}.`,
+      chamada: `Aproveite agora! ✨`,
+      hashtags: ['#TikTokShop', `#${product.replace(/\s+/g, '')}`, '#Ofertas', '#CompreAgora']
+    });
+  }
 
-## Atenção sobre custos
-
-Cada vídeo gerado consome créditos do provedor. Gerar 5 vídeos consome aproximadamente 5 vezes o crédito de uma geração equivalente. Verifique os preços atuais antes de usar em lote.
-
-## Foto do produto
-
-Se quiser que o vídeo seja baseado em uma foto específica do produto, informe uma URL pública direta para uma imagem JPG/PNG/WebP. A imagem precisa estar acessível pelo servidor da API.
-
-## Segurança
-
-Nunca coloque sua API Key no HTML, JavaScript do navegador ou em prints.
+  return new Response(JSON.stringify({
+    success: true,
+    message: `✅ ${count} roteiro(s) gerado(s) com sucesso!`,
+    promptRecebido: `${product} | R$ ${price} | Público: ${audience} | Estilo: ${style}`,
+    quantidade: count,
+    roteiros: roteiros,
+    videoUrl: '#'
+  }), {
+    headers: { 'Content-Type': 'application/json' },
+    status: 200
+  });
+}
